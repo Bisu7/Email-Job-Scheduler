@@ -85,7 +85,7 @@ export async function incrementRateLimit(senderEmail: string): Promise<void> {
         emailCount: newCount,
       },
     })
-    .catch((err) => {
+    .catch((err : any) => {
       console.error('Error updating rate limit in DB:', err);
     });
 }

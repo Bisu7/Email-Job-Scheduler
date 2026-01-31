@@ -16,7 +16,7 @@ export async function getSMTPTransporter(): Promise<nodemailer.Transporter> {
 
   if (smtpHost && smtpUser && smtpPass) {
     // Use real SMTP provider
-    console.log('📧 Using real SMTP provider:', smtpHost);
+    console.log('Using real SMTP provider:', smtpHost);
     transporter = nodemailer.createTransport({
       host: smtpHost,
       port: smtpPort,
@@ -34,7 +34,7 @@ export async function getSMTPTransporter(): Promise<nodemailer.Transporter> {
   const storedPass = process.env.ETHEREAL_PASS;
 
   if (storedUser && storedPass) {
-    console.log('⚠️  Using Ethereal Email (TESTING ONLY - emails are NOT delivered to real addresses)');
+    console.log('Using Ethereal Email (TESTING ONLY - emails are NOT delivered to real addresses)');
     transporter = nodemailer.createTransport({
       host: 'smtp.ethereal.email',
       port: 587,
@@ -50,12 +50,12 @@ export async function getSMTPTransporter(): Promise<nodemailer.Transporter> {
   // Create new Ethereal account
   const testAccount = await nodemailer.createTestAccount();
   
-  console.log('📧 New Ethereal Email account created (TESTING ONLY):');
+  console.log('New Ethereal Email account created (TESTING ONLY):');
   console.log('User:', testAccount.user);
   console.log('Pass:', testAccount.pass);
-  console.log('\n⚠️  IMPORTANT: Ethereal Email does NOT send real emails!');
-  console.log('⚠️  Emails are only available via preview URL in console logs.');
-  console.log('⚠️  To send real emails, configure SMTP_HOST, SMTP_USER, SMTP_PASS in .env');
+  console.log('\n IMPORTANT: Ethereal Email does NOT send real emails!');
+  console.log('Emails are only available via preview URL in console logs.');
+  console.log('To send real emails, configure SMTP_HOST, SMTP_USER, SMTP_PASS in .env');
   console.log('\nAdd these to your .env file for testing:');
   console.log(`ETHEREAL_USER=${testAccount.user}`);
   console.log(`ETHEREAL_PASS=${testAccount.pass}\n`);

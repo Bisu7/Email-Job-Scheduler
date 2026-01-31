@@ -44,7 +44,7 @@ export const emailWorker = new Worker<EmailJobData>(
         const nextWindow = rateLimitCheck.nextAvailableWindow || new Date(Date.now() + 3600000);
         const delay = nextWindow.getTime() - Date.now();
 
-        console.log(`⏸️  Rate limit reached for ${senderEmail}, rescheduling for ${nextWindow.toISOString()}`);
+        console.log(` Rate limit reached for ${senderEmail}, rescheduling for ${nextWindow.toISOString()}`);
 
         await prisma.email.update({
           where: { id: emailId },
@@ -82,10 +82,10 @@ export const emailWorker = new Worker<EmailJobData>(
 
       const previewUrl = nodemailer.getTestMessageUrl(info);
       if (previewUrl) {
-        console.log(`✅ Email sent to ${recipientEmail}. Preview URL: ${previewUrl}`);
-        console.log(`⚠️  Note: If using Ethereal Email, check the preview URL above to view the email (it's not delivered to real addresses)`);
+        console.log(`Email sent to ${recipientEmail}. Preview URL: ${previewUrl}`);
+        console.log(`  Note: If using Ethereal Email, check the preview URL above to view the email (it's not delivered to real addresses)`);
       } else {
-        console.log(`✅ Email sent to ${recipientEmail} (real SMTP provider)`);
+        console.log(`Email sent to ${recipientEmail} (real SMTP provider)`);
       }
 
       // Add delay before next email (to respect minimum delay)
@@ -93,7 +93,7 @@ export const emailWorker = new Worker<EmailJobData>(
 
       return { status: 'sent', messageId: info.messageId };
     } catch (error: any) {
-      console.error(`❌ Error sending email to ${recipientEmail}:`, error);
+      console.error(`Error sending email to ${recipientEmail}:`, error);
 
       // Update email status
       await prisma.email.update({
@@ -118,11 +118,11 @@ export const emailWorker = new Worker<EmailJobData>(
 );
 
 emailWorker.on('completed', (job) => {
-  console.log(`✅ Job ${job.id} completed`);
+  console.log(` Job ${job.id} completed`);
 });
 
 emailWorker.on('failed', (job, err) => {
-  console.error(`❌ Job ${job?.id} failed:`, err);
+  console.error(` Job ${job?.id} failed:`, err);
 });
 
 emailWorker.on('error', (err) => {

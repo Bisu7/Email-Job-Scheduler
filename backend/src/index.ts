@@ -41,8 +41,8 @@ app.get('/health', (req, res) => {
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`📧 Email worker started with concurrency: ${process.env.WORKER_CONCURRENCY || 5}`);
+  console.log(`Server running on port ${PORT}`);
+  console.log(`Email worker started with concurrency: ${process.env.WORKER_CONCURRENCY || 5}`);
 });
 
 // Graceful shutdown

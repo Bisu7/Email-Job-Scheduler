@@ -4,9 +4,7 @@ import { redis } from '../config/redis';
 const MAX_EMAILS_PER_HOUR = parseInt(process.env.MAX_EMAILS_PER_HOUR || '200');
 const MIN_DELAY_BETWEEN_EMAILS_MS = parseInt(process.env.MIN_DELAY_BETWEEN_EMAILS_MS || '2000');
 
-/**
- * Get the current hour window (truncated to the hour)
- */
+
 function getHourWindow(date: Date = new Date()): Date {
   const window = new Date(date);
   window.setMinutes(0);
@@ -15,9 +13,7 @@ function getHourWindow(date: Date = new Date()): Date {
   return window;
 }
 
-/**
- * Get the next available hour window
- */
+
 function getNextHourWindow(): Date {
   const now = new Date();
   const next = new Date(now);
@@ -25,10 +21,6 @@ function getNextHourWindow(): Date {
   return getHourWindow(next);
 }
 
-/**
- * Check if sender can send more emails in current hour
- * Uses Redis for fast atomic operations across multiple workers
- */
 export async function canSendEmail(senderEmail: string): Promise<{
   canSend: boolean;
   currentCount: number;
@@ -55,10 +47,7 @@ export async function canSendEmail(senderEmail: string): Promise<{
   };
 }
 
-/**
- * Increment rate limit counter for sender
- * Updates both Redis (for fast checks) and DB (for persistence)
- */
+
 export async function incrementRateLimit(senderEmail: string): Promise<void> {
   const hourWindow = getHourWindow();
   const redisKey = `rate_limit:${senderEmail}:${hourWindow.getTime()}`;
@@ -90,20 +79,12 @@ export async function incrementRateLimit(senderEmail: string): Promise<void> {
     });
 }
 
-/**
- * Calculate delay before next email can be sent
- * Ensures minimum delay between emails
- */
+
 export function getDelayBeforeNextEmail(): number {
   return MIN_DELAY_BETWEEN_EMAILS_MS;
 }
 
-/**
- * Calculate when email should be scheduled considering:
- * 1. Rate limits (hourly)
- * 2. Minimum delay between emails
- * 3. Current time
- */
+
 export async function calculateScheduledTime(
   senderEmail: string,
   requestedTime: Date,
@@ -134,9 +115,7 @@ export async function calculateScheduledTime(
   return scheduledTime;
 }
 
-/**
- * Get rate limit stats for a sender
- */
+
 export async function getRateLimitStats(senderEmail: string): Promise<{
   currentHourCount: number;
   maxPerHour: number;

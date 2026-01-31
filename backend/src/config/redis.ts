@@ -3,7 +3,13 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-export const redis = new Redis(process.env.REDIS_URL, {
+const redisUrl = process.env.REDIS_URL;
+
+if (!redisUrl) {
+  throw new Error('❌ REDIS_URL is not defined');
+}
+
+export const redis = new Redis(redisUrl, {
   maxRetriesPerRequest: null,
   retryStrategy: (times) => Math.min(times * 50, 2000),
 });
